@@ -7,6 +7,6 @@ import java.time.LocalDate;
 public class Souvenir {
     String name;
     String props;
-    LocalDate dateOfExpiry;
+    LocalDate manufacturingDate;
     int price;
 }
