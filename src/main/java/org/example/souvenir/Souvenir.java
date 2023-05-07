@@ -1,12 +1,16 @@
 package org.example.souvenir;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.example.manufacturer.ManufacturerProps;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 @Data
-public class Souvenir {
+@AllArgsConstructor
+public class Souvenir implements Serializable {
     String name;
-    String props;
+    ManufacturerProps props;
     LocalDate manufacturingDate;
     int price;
 }
