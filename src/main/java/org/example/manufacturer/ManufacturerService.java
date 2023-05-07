@@ -20,6 +20,13 @@ public class ManufacturerService {
         }
         manufacturerDao.addManufacturer(manufacturer);
     }
+    public List<Manufacturer> getManufacturersByProps(ManufacturerProps props){
+        return manufacturerDao.getManufacturers().stream()
+                .filter(m-> m.name.equals(props.getName())    &&
+                        m.country.equals(props.getCountry()))
+                .toList();
+    }
+
     public void editManufacturer(Manufacturer newManufacturer){
         Manufacturer manufacturer = manufacturerDao.getManufacturers().stream()
                 .findFirst()

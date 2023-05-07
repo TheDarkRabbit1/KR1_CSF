@@ -1,7 +1,7 @@
 package org.example.manufacturer;
 
 import lombok.Data;
-
+//ідея пропсів в незалежності коду від розширення класу Manufacturer
 @Data
 public class ManufacturerProps {
     private String name;
