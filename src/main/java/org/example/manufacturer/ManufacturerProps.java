@@ -11,4 +11,9 @@ public class ManufacturerProps {
         this.name=manufacturer.name;
         this.country=manufacturer.country;
     }
+
+    public ManufacturerProps(String name, String country) {
+        this.name = name;
+        this.country = country;
+    }
 }

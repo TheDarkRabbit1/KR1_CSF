@@ -4,6 +4,7 @@ package org.example.souvenir;
 import lombok.SneakyThrows;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,10 +32,12 @@ public class SouvenirDao {
         } catch (FileNotFoundException e) {
             souvenirs = Collections.emptyList();
         }
+        if (souvenirs.isEmpty())
+            souvenirs=new ArrayList<>();
     }
 
     @SneakyThrows
-    public static void close() {
+    public void close() {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("souvenir.sv"))) {
             if (souvenirs==null)
                 souvenirs=Collections.emptyList();

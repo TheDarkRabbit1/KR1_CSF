@@ -10,6 +10,10 @@ public class ManufacturerService {
         instance=instance!=null?instance:new ManufacturerService();
         return instance;
     }
+
+    private ManufacturerService() {
+    }
+
     public List<Manufacturer> getManufacturers(){
         return manufacturerDao.getManufacturers();
     }
@@ -31,11 +35,11 @@ public class ManufacturerService {
         Manufacturer manufacturer = manufacturerDao.getManufacturers().stream()
                 .findFirst()
                 .orElseThrow();
-        manufacturerDao.removeManufacturer(manufacturer.name);
+        manufacturerDao.removeManufacturer(new ManufacturerProps(manufacturer));
         manufacturerDao.addManufacturer(manufacturer);
     }
-    public void removeManufacturer(String manufacturer){
-        if (!manufacturerDao.removeManufacturer(manufacturer))
+    public void removeManufacturer(ManufacturerProps props){
+        if (!manufacturerDao.removeManufacturer(props))
             System.out.println("no such manufacturer found");
     }
 

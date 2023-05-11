@@ -13,4 +13,7 @@ public class Souvenir implements Serializable {
     ManufacturerProps props;
     LocalDate manufacturingDate;
     int price;
+    public int getYear(){
+        return this.manufacturingDate.getYear();
+    }
 }
