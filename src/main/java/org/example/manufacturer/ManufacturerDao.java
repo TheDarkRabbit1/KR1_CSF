@@ -31,7 +31,9 @@ public class ManufacturerDao {
     public void addManufacturer(Manufacturer m) {
         manufacturers.add(m);
     }
-
+    public boolean removeManufacturer(Manufacturer manufacturer){
+        return manufacturers.removeIf(manufacturer::equals);
+    }
     public boolean removeManufacturer(ManufacturerProps props) {
         return manufacturers.removeIf(m -> m.name.equals(props.getName())
                 && m.country.equals(props.getCountry()));

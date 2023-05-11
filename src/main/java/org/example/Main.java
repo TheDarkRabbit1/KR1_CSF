@@ -55,11 +55,47 @@ public class Main {
         switch(manipulationOption){
             case 1 -> viewAll(menuOption==1?manufacturerService.getManufacturers():souvenirService.getSouvenirs());
             case 2 -> {if (menuOption==1){addManufacturer();}else{addSouvenir();}}
+            case 3 -> {if (menuOption==1){editManufacturer();}else{editSouvenir();}}
+            case 4 -> {if (menuOption==1){removeManufacturer();}else {removeSouvenir();}}
             default -> System.out.println("no such option in menu");
         }
     }
 
-    private static void addSouvenir() {
+    private static void removeManufacturer() {
+        System.out.println("enter name and country of manufacturing:");
+        manufacturerService.removeManufacturer(new ManufacturerProps(scanner.next(), scanner.next()));
+    }
+
+    private static void removeSouvenir() {
+        System.out.println("enter souvenir name, manufacturer name and country");
+        souvenirService.removeSouvenir(scanner.next(),new ManufacturerProps(scanner.next(), scanner.next()));
+    }
+
+    private static void editManufacturer(){
+        System.out.println("enter props of Manufacturer");
+        ManufacturerProps props  = new ManufacturerProps(scanner.next(), scanner.next());
+        List<Manufacturer> manufacturers = manufacturerService.getManufacturersByProps(props);
+        Manufacturer manufacturer;
+        if (manufacturers.isEmpty()){
+            System.out.println("no manufacturer was found");
+            return;
+        }else{
+            System.out.println("pick manufacturer from the list:");
+            for (int i = 0; i < manufacturers.size(); i++) {
+                System.out.println(i+" - "+manufacturers.get(i));
+            }
+            manufacturer=manufacturers.get(scanner.nextInt());
+        }
+        System.out.println("enter new name or country of manufacturer (no changes if line`s empty)");
+        manufacturerService.editManufacturer(manufacturer,new ManufacturerProps(scanner.next(),scanner.next()));
+    }
+    private static void editSouvenir(){
+        System.out.println("enter souvenir name and props:");
+        String name = scanner.next();
+        ManufacturerProps props = new ManufacturerProps(scanner.next(), scanner.next());
+        souvenirService.editSouvenir(name,props, manageSouvenir());
+    }
+    private static Souvenir manageSouvenir() {
         System.out.println("""
                 name
                 props [name, country]
@@ -71,12 +107,18 @@ public class Main {
         int[] dateParams = Arrays.stream(scanner.next().split(" ")).mapToInt(Integer::valueOf).toArray();
         LocalDate date = LocalDate.of(dateParams[2],dateParams[1],dateParams[0]);
         int price = scanner.nextInt();
-        souvenirService.addSouvenir(new Souvenir(name,props,date,price));
+        return new Souvenir(name,props,date,price);
+    }
+    private static void addSouvenir(){
+        souvenirService.addSouvenir(manageSouvenir());
     }
 
     private static void addManufacturer(){
+        manufacturerService.addManufacturer(manageManufacturer());
+    }
+    private static Manufacturer manageManufacturer(){
         System.out.println("input name and country:");
-        manufacturerService.addManufacturer(new Manufacturer(scanner.next(),scanner.next()));
+        return new Manufacturer(scanner.next(),scanner.next());
     }
 
     private static void viewAll(List<?> list){

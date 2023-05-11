@@ -2,6 +2,7 @@ package org.example.souvenir;
 
 
 import lombok.SneakyThrows;
+import org.example.manufacturer.ManufacturerProps;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -21,6 +22,9 @@ public class SouvenirDao {
     }
     public void addSouvenir(Souvenir souvenir){
         souvenirs.add(souvenir);
+    }
+    public boolean removeSouvenir(String name, ManufacturerProps props){
+        return souvenirs.removeIf(s->s.name.equals(name)&&s.props.equals(props));
     }
     public boolean removeSouvenir(Souvenir souvenir){
         return souvenirs.removeIf(s->s.name.equals(souvenir.name)&&s.props.equals(souvenir.props));

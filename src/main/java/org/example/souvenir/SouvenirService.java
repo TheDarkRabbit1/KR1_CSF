@@ -1,5 +1,6 @@
 package org.example.souvenir;
 
+import org.example.manufacturer.Manufacturer;
 import org.example.manufacturer.ManufacturerProps;
 
 import java.util.List;
@@ -44,12 +45,17 @@ public class SouvenirService {
                 .filter(s->s.props.equals(props))
                 .forEach(souvenirDao::removeSouvenir);
     }
-    public void removeSouvenir(Souvenir souvenir){
-        if (!souvenirDao.removeSouvenir(souvenir))
+    public void removeSouvenir(String name, ManufacturerProps props){
+        if (!souvenirDao.removeSouvenir(name, props))
             System.out.println("no such souvenir to remove");
     }
 
     public List<Souvenir> getSouvenirsByYear(int year) {
         return souvenirDao.getSouvenirs().stream().filter(s -> s.getYear()==year).toList();
+    }
+
+    public void editSouvenir(String name, ManufacturerProps props, Souvenir newSouvenir) {
+        removeSouvenir(name,props);
+        addSouvenir(newSouvenir);
     }
 }

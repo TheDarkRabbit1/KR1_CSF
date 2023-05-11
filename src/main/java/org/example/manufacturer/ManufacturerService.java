@@ -30,13 +30,16 @@ public class ManufacturerService {
                         m.country.equals(props.getCountry()))
                 .toList();
     }
-
-    public void editManufacturer(Manufacturer newManufacturer){
+    public void editManufacturer(Manufacturer oldManufacturer, ManufacturerProps newProps){
         Manufacturer manufacturer = manufacturerDao.getManufacturers().stream()
+                .filter(m->m.name.equals(oldManufacturer.getName())&&m.country.equals(oldManufacturer.getCountry()))
                 .findFirst()
                 .orElseThrow();
-        manufacturerDao.removeManufacturer(new ManufacturerProps(manufacturer));
-        manufacturerDao.addManufacturer(manufacturer);
+        manufacturerDao.removeManufacturer(oldManufacturer);
+        if (!newProps.getName().isEmpty())
+            manufacturer.setName(newProps.getName());
+        if (!newProps.getCountry().isEmpty())
+            manufacturer.setCountry(newProps.getCountry());
     }
     public void removeManufacturer(ManufacturerProps props){
         if (!manufacturerDao.removeManufacturer(props))
