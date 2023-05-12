@@ -10,7 +10,6 @@ import org.example.souvenir.SouvenirService;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -86,17 +85,17 @@ public class Main {
             }
             manufacturer=manufacturers.get(scanner.nextInt());
         }
-        System.out.println("enter new name or country of manufacturer (no changes if line`s empty)");
+        System.out.println("enter new name or country of manufacturer (no changes if line`s '-' )");
         manufacturerService.editManufacturer(manufacturer,new ManufacturerProps(scanner.next(),scanner.next()));
     }
     private static void editSouvenir(){
-        System.out.println("enter souvenir name and props:");
+        System.out.println("old souvenir`s name and props:");
         String name = scanner.next();
         ManufacturerProps props = new ManufacturerProps(scanner.next(), scanner.next());
         souvenirService.editSouvenir(name,props, manageSouvenir());
     }
     private static Souvenir manageSouvenir() {
-        System.out.println("""
+        System.out.print("""
                 name
                 props [name, country]
                 date [01-01-1999]
@@ -104,7 +103,7 @@ public class Main {
                 """);
         String name= scanner.next();
         ManufacturerProps props = new ManufacturerProps(scanner.next(), scanner.next());
-        int[] dateParams = Arrays.stream(scanner.next().split(" ")).mapToInt(Integer::valueOf).toArray();
+        int[] dateParams = Arrays.stream(scanner.next().split("-")).mapToInt(Integer::valueOf).toArray();
         LocalDate date = LocalDate.of(dateParams[2],dateParams[1],dateParams[0]);
         int price = scanner.nextInt();
         return new Souvenir(name,props,date,price);
@@ -126,11 +125,17 @@ public class Main {
     }
 
     private static void souvenirsByManufacturer() {
-        souvenirService.getSouvenirsByProps(inputManufacturerProps()).forEach(System.out::println);
+        List<Souvenir> list = souvenirService.getSouvenirsByProps(inputManufacturerProps());
+        if (list.isEmpty()){
+            System.out.println("No souvenirs by this manufacturer props were found");
+        }else{list.forEach(System.out::println);}
     }
 
     private static void souvenirsByCountry() {
-        souvenirService.getSouvenirsByCountry(scanner.next()).forEach(System.out::println);
+        List<Souvenir> list = souvenirService.getSouvenirsByCountry(scanner.next());
+        if (list.isEmpty()){
+            System.out.println("no matching souvenirs were found");
+        }else{list.forEach(System.out::println);}
     }
 
     private static void manufacturerSouvenirsBeforePrice() {
@@ -139,9 +144,12 @@ public class Main {
     }
 
     private static void manufacturerListWithTheirSouvenirs() {
-        ManufacturerProps props = inputManufacturerProps();
-        manufacturerService.getManufacturers().forEach(
-                m-> souvenirService.getSouvenirsByProps(props).forEach(System.out::println));
+        Map<String, List<Souvenir>> souvenirsByManufacturer = souvenirService.getSouvenirs().stream()
+                .collect(Collectors.groupingBy(s -> s.getProps().getName()+" "+s.getProps().getCountry()));
+        souvenirsByManufacturer.forEach((manufacturer, souvenirs) -> {
+            System.out.println("Manufacturer: " + manufacturer);
+            souvenirs.forEach(souvenir -> System.out.println(souvenir.toString()));
+        });
     }
 
     private static void souvenirListByYear() {
@@ -151,10 +159,12 @@ public class Main {
     }
 
     private static void byEachYearSouvenirs() {
-        //todo probably gives 1 s by each year
-        Map<Integer, Souvenir> map = souvenirService.getSouvenirs().stream()
-                .collect(Collectors.toMap(Souvenir::getYear, Function.identity()));
-        map.forEach((key, value) -> System.out.println(key + "\n" + value.toString()));
+        Map<Integer, List<Souvenir>> map = souvenirService.getSouvenirs().stream()
+                .collect(Collectors.groupingBy(Souvenir::getYear));
+        map.forEach((key, value) -> {
+            System.out.println(key);
+            value.forEach(souvenir -> System.out.println(souvenir.toString()));
+        });
     }
 
     private static void deleteManufacturerWithHisSouvenirs() {

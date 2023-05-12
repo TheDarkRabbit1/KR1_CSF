@@ -18,7 +18,7 @@ public class ManufacturerService {
         return manufacturerDao.getManufacturers();
     }
     public void addManufacturer(Manufacturer manufacturer){
-        if (manufacturerDao.getManufacturers().stream().findFirst().isPresent()){
+        if (manufacturerDao.getManufacturers().stream().anyMatch(manufacturer::equals)){
             System.out.println("Manufacturer with this name already exist");
             return;
         }
@@ -35,10 +35,9 @@ public class ManufacturerService {
                 .filter(m->m.name.equals(oldManufacturer.getName())&&m.country.equals(oldManufacturer.getCountry()))
                 .findFirst()
                 .orElseThrow();
-        manufacturerDao.removeManufacturer(oldManufacturer);
-        if (!newProps.getName().isEmpty())
+        if (!newProps.getName().equals("-"))
             manufacturer.setName(newProps.getName());
-        if (!newProps.getCountry().isEmpty())
+        if (!newProps.getCountry().equals("-"))
             manufacturer.setCountry(newProps.getCountry());
     }
     public void removeManufacturer(ManufacturerProps props){

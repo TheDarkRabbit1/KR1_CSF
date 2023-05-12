@@ -1,9 +1,12 @@
 package org.example.manufacturer;
 
 import lombok.Data;
+
+import java.io.Serializable;
+
 //ідея пропсів в незалежності коду від розширення класу Manufacturer
 @Data
-public class ManufacturerProps {
+public class ManufacturerProps implements Serializable {
     private String name;
     private String country;
 
